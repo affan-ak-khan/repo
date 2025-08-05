@@ -1,0 +1,23 @@
+/* src/components/WorkShowcase.css */
+
+/*
+* The main container is now a standard section.
+* Removed height and overflow properties as it's no longer a self-scrolling container.
+* The page itself will handle scrolling.
+*/
+.work-showcase-container {
+  /* No specific styles needed here beyond what Tailwind provides */
+}
+
+/*
+* The heading is now a regular block element, not sticky or absolutely positioned.
+* Its positioning and appearance are handled by Tailwind classes in JSX.
+*/
+.work-showcase-heading {
+  /* No specific styles needed here beyond what Tailwind provides in JSX */
+}
+
+/* Ensure images maintain their aspect ratio and fill their container */
+.work-image-item img {
+  display: block; /* Remove extra space below images */
+}
