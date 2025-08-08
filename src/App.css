@@ -1,7 +1,37 @@
-/* App.css */
-body {
+/* Make sure all elements use box-sizing so padding/margins don't break layout */
+* {
+  box-sizing: border-box;
   margin: 0;
-  background-color: #0a0a0a;
-  color: white;
-  font-family: 'Segoe UI', sans-serif;
+  padding: 0;
+}
+
+/* Make body use 100% width and avoid horizontal scroll */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Make all images scale with screen */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Use relative font sizes */
+body {
+  font-family: sans-serif;
+  font-size: 1rem; /* Scales with screen zoom */
+}
+
+/* Simple responsiveness for small screens */
+@media (max-width: 768px) {
+  h1, h2, h3 {
+    font-size: 1.5rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
 }

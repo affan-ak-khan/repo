@@ -1,67 +1,64 @@
-// src/components/WorkShowcase.jsx
-import React from 'react';
-import './WorkShowcase.css'; // Import the custom CSS for styling
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
-const workImages = [
-  // Using placeholder images that visually resemble the ones in your screenshot.
-  // Adjust dimensions to create the staggered effect.
-  { id: 1, src: 'src/assets/images/7.webp', alt: 'Person working at a desk' },
-  { id: 2, src: 'src/assets/images/8.webp', alt: 'Person shopping online with a laptop' },
-  { id: 3, src: 'src/assets/images/9.webp', alt: 'Hand holding a Coca-Cola can' }, // Taller image
-  { id: 4, src: 'src/assets/images/10.webp', alt: 'Person using a mobile phone' }, // Taller image
-  { id: 5, src: 'src/assets/images/7.webp', alt: 'Creative work process' },
-  { id: 6, src: 'src/assets/images/8.webp', alt: 'Design mockup on a screen' },
+const images = [
+  { id: 1, src: "src/assets/images/7.webp", alt: "Person working at a desk" },
+  { id: 2, src: "src/assets/images/8.webp", alt: "Person shopping online" },
+  { id: 3, src: "src/assets/images/9.webp", alt: "Hand holding a Coca-Cola can" },
+  { id: 4, src: "src/assets/images/10.webp", alt: "Person using a mobile phone" },
+  { id: 5, src: "src/assets/images/7.webp", alt: "Creative work process" },
+  { id: 6, src: "src/assets/images/8.webp", alt: "Design mockup on a screen" },
 ];
 
-const WorkShowcase = () => {
-  // Split images into two columns for the staggered effect
-  const column1Images = workImages.filter((_, i) => i % 2 === 0); // Images for the first column (0, 2, 4, ...)
-  const column2Images = workImages.filter((_, i) => i % 2 !== 0); // Images for the second column (1, 3, 5, ...)
+export default function WorkShowcase() {
+  const sectionRef = useRef(null);
+
+  // Track scroll for the entire section
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Heading enlargement on scroll down and shrink on scroll up
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 2]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <section className="bg-black py-20 text-white font-inter">
-      {/* "WORK" heading - now a regular block element above the images */}
-      {/* It will scroll normally with the page content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold uppercase text-white">
-          Work
-        </h1>
-      </div>
+    <section ref={sectionRef} className="bg-black text-white py-20">
+      <div className="container mx-auto">
+        {/* Floating + Enlarging Heading */}
+        <motion.h2
+          style={{ scale, y }}
+          className="text-6xl font-bold text-center mb-16 sticky top-20 z-20"
+        >
+          WORK
+        </motion.h2>
 
-      {/* Images Grid - positioned below the heading */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Flex container for the two image columns */}
-        <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-          {/* Column 1 for images */}
-          <div className="flex flex-col gap-4 sm:gap-6 w-full md:w-1/2">
-            {column1Images.map((image) => (
-              <div key={image.id} className="relative rounded-lg overflow-hidden">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Column 2 for images - with top margin for staggering */}
-          {/* The mt-32 (or md:mt-32 for responsiveness) creates the "starting from half of that picture" effect */}
-          <div className="flex flex-col gap-4 sm:gap-6 w-full md:w-1/2 mt-8 md:mt-32">
-            {column2Images.map((image) => (
-              <div key={image.id} className="relative rounded-lg overflow-hidden">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            ))}
-          </div>
+        {/* Two Column Image Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {images.map((image, index) => (
+            <motion.div
+              key={image.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.4 }}
+              transition={{
+                duration: 0.8,
+                delay: (index % 2) * 0.3, // stagger by column
+              }}
+              className={`w-full ${
+                index % 2 === 1 ? "mt-20" : ""
+              }`} // stagger vertically
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="w-full h-auto rounded-lg shadow-lg"
+              />
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default WorkShowcase;
+}
